@@ -1,17 +1,20 @@
 class User {
-    constructor(username, emailAddress){
-        this.name = username
-        this.email = emailAddress
-        this.accountBalance = 0
+    constructor(name, email){
+        this.name = name
+        this.email = email
+        this.account = new BankAccount(intRate=0.02, balance=0)
     }
     makeDeposit(amount){
-        this.accountBalance += amount
+        this.account.deposit(amount)
+        return this
     }
     makeWithdrawl(amount){
-        this.accountBalance -= amount
+        this.account.withdrawl(amount)
+        return this
     }
     displayBalance(){
-        console.log(`Name: ${this.name}, Account Balance: $${this.accountBalance}`);
+        console.log(`Name: ${this.name}, Account Balance: $${this.account.balance}`)
+        return this
     }
     transferMoney(amount, recipient){
         if (this.accountBalance >= amount) {
@@ -26,27 +29,46 @@ class User {
 const rick = new User("Rick Van Python", "rick@python.com")
 const morty = new User("Morty Smith", "morty@python.com")
 const bunny = new User("Bugs Bunny", "bugsbunny@javascript.com")
-console.log(rick.name)
-console.log(morty.name)
 
-rick.makeDeposit(100)
-rick.makeDeposit(200)
-rick.makeDeposit(50)
-rick.makeWithdrawl(150)
-rick.displayBalance()
+rick.makeDeposit(100).makeDeposit(200).makeDeposit(50).makeWithdrawl(150).displayBalance()
 
-morty.makeDeposit(50)
-morty.makeDeposit(150)
-morty.makeWithdrawl(20)
-morty.makeWithdrawl(50)
-morty.displayBalance()
+morty.makeDeposit(50).makeDeposit(150).makeWithdrawl(20).makeWithdrawl(50).displayBalance()
 
-bunny.makeDeposit(500)
-bunny.makeWithdrawl(50)
-bunny.makeWithdrawl(20)
-bunny.makeWithdrawl(150)
-bunny.displayBalance()
+bunny.makeDeposit(500).makeWithdrawl(50).makeWithdrawl(20).makeWithdrawl(150).displayBalance()
 
 rick.transferMoney(20, bunny)
 rick.displayBalance()
 bunny.displayBalance()
+
+class BankAccount {
+    constructor(intRate, balance){
+        this.rate = intRate
+        this.balance = balance
+        this.initRate = 0.02
+        return this
+    }
+    deposit(amount) {
+        this.balance += amount
+        return this
+    }
+    withdrawl(amount) {
+        this.balance -= amount
+        return this
+    }
+    displayAccountInfo() {
+        console.log(`Interest rate: ${this.rate}, Account Balance: $${this.balance}`)
+        return this
+    }
+    yieldInterest() {
+        if (this.balance > 0) {
+            this.balance += this.balance * this.rate
+        }
+        return this
+    }
+}
+
+const bobsAcct = new BankAccount (0.05, 100)
+const jerrysAcct = new BankAccount (0.03, 50)
+
+bobsAcct.deposit(20).deposit(50).deposit(100).withdrawl(15).displayAccountInfo()
+jerrysAcct.deposit(200).deposit(1000).withdrawl(100).withdrawl(50).withdrawl(150).withdrawl(200).displayAccountInfo()
